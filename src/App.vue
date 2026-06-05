@@ -1,21 +1,57 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { supabase } from './utils/supabase'
+import Card from 'primevue/card'
+import DatePicker from 'primevue/datepicker';
+import Popover from 'primevue/popover';
+import Button from 'primevue/button';
 
-const todos = ref([])
 
-async function getTodos() {
-  const { data } = await supabase.from('todos').select()
-  todos.value = data
-}
 
-onMounted(() => {
-  getTodos()
-})
+
+
 </script>
 
+<!-- TODO: each date has its own table to show expenses or allowances -->
+
 <template>
-  <ul>
-    <li v-for="todo in todos" :key="todo.id">{{ todo.name }}</li>
-  </ul>
+  <div class="app-content">
+    <div class="top-section">
+      <Card>
+        <template #title>Current Amount (PHP)</template>
+        <template #content>
+
+        </template>
+      </Card>
+      <Card>
+        <template #title>Amount Spent (PHP)</template>
+        <template #content>
+
+        </template>
+      </Card>
+    </div>
+
+    <DatePicker v-model="date" inline showWeek class="w-full sm:w-[30rem]" />
+
+
+  </div>
 </template>
+
+<style>
+.app-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.top-section {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+
+
+
+</style>
