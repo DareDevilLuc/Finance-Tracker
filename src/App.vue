@@ -31,7 +31,7 @@ import Button from 'primevue/button';
       </Card>
     </div>
 
-    <DatePicker v-model="date" inline showWeek class="w-full sm:w-[30rem]" />
+    <DatePicker v-model="date" inline showWeek class="datepicker" />
 
 
   </div>
@@ -49,6 +49,10 @@ import Button from 'primevue/button';
   display: flex;
   flex-direction: row;
   gap: 1rem;
+}
+
+.datepicker {
+  width: 50%;
 }
 
 
