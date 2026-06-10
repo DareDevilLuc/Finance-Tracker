@@ -9,7 +9,6 @@ import Button from 'primevue/button';
 
 
 
-
 </script>
 
 <!-- TODO: each date has its own table to show expenses or allowances -->
@@ -30,8 +29,6 @@ import Button from 'primevue/button';
         </template>
       </Card>
     </div>
-
-    <DatePicker v-model="date" inline showWeek class="datepicker" />
 
 
   </div>
