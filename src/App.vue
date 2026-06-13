@@ -6,8 +6,6 @@ import Button from 'primevue/button';
 import DatePicker from 'primevue/datepicker';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import ColumnGroup from 'primevue/columngroup';   // optional
-import Row from 'primevue/row';                   // optional
 
 
 const date = ref()
@@ -42,6 +40,15 @@ const date = ref()
           <DatePicker v-model="date" showIcon fluid iconDisplay="input" />
         </template>
       </Card>
+
+      <Card>
+        <template #content>
+          <DataTable tableStyle="min-width: 50rem">
+          </DataTable>
+
+        </template>
+      </Card>
+
     </div>
 
 
@@ -57,6 +64,12 @@ const date = ref()
 }
 
 .top-section {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.data-section {
   display: flex;
   flex-direction: row;
   gap: 1rem;
