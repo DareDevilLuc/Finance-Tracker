@@ -2,9 +2,15 @@
 import { ref, onMounted } from 'vue'
 import { supabase } from './utils/supabase'
 import Card from 'primevue/card'
-import DatePicker from 'primevue/datepicker';
-import Popover from 'primevue/popover';
 import Button from 'primevue/button';
+import DatePicker from 'primevue/datepicker';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';   // optional
+import Row from 'primevue/row';                   // optional
+
+
+const date = ref()
 
 
 
@@ -30,6 +36,14 @@ import Button from 'primevue/button';
       </Card>
     </div>
 
+    <div class="data-section">
+      <Card>
+        <template #content>
+          <DatePicker v-model="date" showIcon fluid iconDisplay="input" />
+        </template>
+      </Card>
+    </div>
+
 
   </div>
 </template>
@@ -47,12 +61,4 @@ import Button from 'primevue/button';
   flex-direction: row;
   gap: 1rem;
 }
-
-.datepicker {
-  width: 50%;
-}
-
-
-
-
 </style>
