@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { supabase } from './utils/supabase'
+import InputNumber from 'primevue/inputnumber'
+import InputText from 'primevue/inputtext'
 import Card from 'primevue/card'
 import Button from 'primevue/button'
 import DatePicker from 'primevue/datepicker'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dialog from 'primevue/dialog'
+import { Form } from '@primevue/forms'
 
 const date = ref()
 const visible = ref(false)
 </script>
-
-<!-- TODO: each date has its own table to show expenses or allowances -->
 
 <template>
   <div class="app-content">
@@ -52,8 +53,21 @@ const visible = ref(false)
     </div>
   </div>
 
-  <Dialog v-model:visible="visible" modal header="Add Allowance/Expense">
-    Testing the bilat
+  <Dialog
+    v-model:visible="visible"
+    modal
+    header="Add Allowance/Expense"
+    :style="{ width: '25rem' }"
+  >
+    <Form>
+      <div class="dialog-section">
+        <InputText name="description" />
+
+        <InputNumber name="expall" />
+
+        <Button type="submit" label="Submit" />
+      </div>
+    </Form>
   </Dialog>
 </template>
 
@@ -78,6 +92,12 @@ const visible = ref(false)
 }
 
 .month-button {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dialog-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
