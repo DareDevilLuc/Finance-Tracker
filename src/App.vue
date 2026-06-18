@@ -9,10 +9,13 @@ import DatePicker from 'primevue/datepicker'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dialog from 'primevue/dialog'
+import FloatLabel from 'primevue/floatlabel'
+import Select from 'primevue/select'
 import { Form } from '@primevue/forms'
 
 const date = ref()
 const visible = ref(false)
+const types = ref(['Allowance', 'Expense'])
 </script>
 
 <template>
@@ -61,9 +64,14 @@ const visible = ref(false)
   >
     <Form>
       <div class="dialog-section">
-        <InputText name="description" />
+        <label for="description">Description</label>
+        <InputText id="description" name="description" fluid />
 
-        <InputNumber name="expall" />
+        <label for="amount">Amount</label>
+        <InputNumber id="amount" name="amount" fluid />
+
+        <label for="type">Select Type</label>
+        <Select id="type" name="type" :options="types" />
 
         <Button type="submit" label="Submit" />
       </div>
