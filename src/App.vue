@@ -9,13 +9,20 @@ import DatePicker from 'primevue/datepicker'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dialog from 'primevue/dialog'
-import FloatLabel from 'primevue/floatlabel'
 import Select from 'primevue/select'
+import Tag from 'primevue/tag'
 import { Form } from '@primevue/forms'
 
 const date = ref()
 const visible = ref(false)
 const types = ref(['Allowance', 'Expense'])
+
+
+const transactions = ref([
+  { amount : 500, date : '2026-06-19', type : 'Expense' },
+  { amount : 100, date : '2026-06-20', type : 'Allowance' },
+])
+
 </script>
 
 <template>
@@ -50,7 +57,16 @@ const types = ref(['Allowance', 'Expense'])
 
       <Card>
         <template #content>
-          <DataTable tableStyle="min-width: 50rem"> </DataTable>
+          <DataTable tableStyle="min-width: 50rem" :value="transactions"> 
+            <Column field="date" header="Date"/>
+            <Column field="type" header="Type">
+              <template #body="{ data }">
+                <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'sucess'"/>
+              </template>
+            </Column>
+            <Column field="amount" header="Amount"/>
+
+          </DataTable>
         </template>
       </Card>
     </div>
@@ -67,13 +83,17 @@ const types = ref(['Allowance', 'Expense'])
         <label for="description">Description</label>
         <InputText id="description" name="description" fluid />
 
-        <label for="amount">Amount</label>
+        <label for="amount">Amount (PHP)</label>
         <InputNumber id="amount" name="amount" fluid />
 
         <label for="type">Select Type</label>
         <Select id="type" name="type" :options="types" />
 
+        <label for="type">Select Date</label>
+        <DatePicker id="date" name="date" showIcon/>
+
         <Button type="submit" label="Submit" />
+
       </div>
     </Form>
   </Dialog>
@@ -110,4 +130,5 @@ const types = ref(['Allowance', 'Expense'])
   flex-direction: column;
   gap: 1rem;
 }
+
 </style>
