@@ -17,12 +17,10 @@ const date = ref()
 const visible = ref(false)
 const types = ref(['Allowance', 'Expense'])
 
-
 const transactions = ref([
-  { amount : 500, date : '2026-06-19', type : 'Expense' },
-  { amount : 100, date : '2026-06-20', type : 'Allowance' },
+  { amount: 500, date: '2026-06-19', type: 'Expense', description: 'Commute' },
+  { amount: 100, date: '2026-06-20', type: 'Allowance', description: 'Daily Allowance' },
 ])
-
 </script>
 
 <template>
@@ -57,15 +55,18 @@ const transactions = ref([
 
       <Card>
         <template #content>
-          <DataTable tableStyle="min-width: 50rem" :value="transactions"> 
-            <Column field="date" header="Date"/>
+          <DataTable tableStyle="min-width: 50rem" :value="transactions">
+            <Column field="date" header="Date" />
             <Column field="type" header="Type">
               <template #body="{ data }">
-                <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'"/>
+                <Tag
+                  :value="data.type"
+                  :severity="data.type === 'Expense' ? 'danger' : 'success'"
+                />
               </template>
             </Column>
-            <Column field="amount" header="Amount"/>
-
+            <Column field="amount" header="Amount" />
+            <Column field="description" header="Description" />
           </DataTable>
         </template>
       </Card>
@@ -90,10 +91,9 @@ const transactions = ref([
         <Select id="type" name="type" :options="types" />
 
         <label for="type">Select Date</label>
-        <DatePicker id="date" name="date" showIcon/>
+        <DatePicker id="date" name="date" showIcon />
 
         <Button type="submit" label="Submit" />
-
       </div>
     </Form>
   </Dialog>
@@ -130,5 +130,4 @@ const transactions = ref([
   flex-direction: column;
   gap: 1rem;
 }
-
 </style>
