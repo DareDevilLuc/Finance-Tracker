@@ -61,7 +61,7 @@ const transactions = ref([
             <Column field="date" header="Date"/>
             <Column field="type" header="Type">
               <template #body="{ data }">
-                <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'sucess'"/>
+                <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'"/>
               </template>
             </Column>
             <Column field="amount" header="Amount"/>
