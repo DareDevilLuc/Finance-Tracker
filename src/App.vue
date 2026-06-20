@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import { useAuth } from './composables/useAuth'
+
+const { initAuth } = useAuth()
+
+initAuth()
 </script>
 
 <template>
