@@ -16,7 +16,6 @@ initAuth()
 <style>
 .content {
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 </style>
