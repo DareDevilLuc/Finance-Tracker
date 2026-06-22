@@ -1,19 +1,58 @@
 <script setup lang="ts">
 import Card from 'primevue/card'
+import { ref } from 'vue'
 import { Form } from '@primevue/forms'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+
+import { useAuth } from '@/composables/useAuth'
+import { useRouter } from 'vue-router'
+
+const { signIn } = useAuth()
+
+const success = ref('')
+const fail = ref('')
+
+const onFormSubmit = async ({ value }: any) => {
+  try {
+    await signIn(value.email, value.password)
+  } catch (e: any) {
+
+  }
+}
+
+
 </script>
 
 <template>
-  <div class="login-card">
-    <Card style="width: 25rem; display: flex; align-items: center; flex-direction: column">
-      <template #title>Login User</template>
-      <template #content>
-        <p>
-          Don't have an account yet?
-          <RouterLink to="/signup" class="link">Sign up !</RouterLink>
-        </p>
-      </template>
-    </Card>
+  <div class="login-content">
+    <div class="login-card">
+      <Card style="width: 25rem; display: flex; align-items: center; flex-direction: column">
+        <template #title>Log in</template>
+        <template #content>
+          <Form @submit="onFormSubmit">
+            <div class="login-section">
+              <label for="email">Email</label>
+              <InputText id="email" name="email" fluid />
+
+              <label for="password">Password</label>
+              <InputText id="password" name="password" fluid />
+
+              <Button type="submit" label="Submit" />
+
+              <p v-if="success" style="color: green;">{{ success }}</p>
+              <p v-if="fail" style="color: red;"> {{ fail }}</p>
+              <p>
+                Don't have an account yet?
+                <RouterLink to="/signup" class="link">Log in !</RouterLink>
+              </p>
+
+            </div>
+          </Form>
+        </template>
+      </Card>
+    </div>
+
   </div>
 </template>
 
@@ -21,5 +60,17 @@ import { Form } from '@primevue/forms'
 .link {
   text-decoration: none;
   color: green;
+}
+
+.login-content {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.login-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>

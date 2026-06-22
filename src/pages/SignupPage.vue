@@ -6,8 +6,10 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 
 import { useAuth } from '@/composables/useAuth'
+import { useRouter } from 'vue-router'
 
 const { signUp } = useAuth()
+const router = useRouter()
 
 const success = ref('')
 const fail = ref('')
@@ -16,6 +18,7 @@ const onFormSubmit = async ( { values }: any ) => {
   try {
     await signUp(values.email, values.password, values.username)
     success.value = "Sign up successful !"
+    router.push('/login')
   } catch (e: any) {
     fail.value = e.message || 'Unable to sign up. Try again.'
   }
@@ -25,8 +28,8 @@ const onFormSubmit = async ( { values }: any ) => {
 </script>
 
 <template>
-  <div class="login-content">
-    <div class="login-card">
+  <div class="signup-content">
+    <div class="signup-card">
       <Card style="width: 25rem; display: flex; align-items: center; flex-direction: column">
         <template #title>Sign Up</template>
         <template #content>
@@ -43,8 +46,8 @@ const onFormSubmit = async ( { values }: any ) => {
 
               <Button type="submit" label="Submit" />
 
-              <p v-if="success">{{ success }}</p>
-              <p v-if="fail"> {{ fail }}</p>
+              <p v-if="success" style="color: green;">{{ success }}</p>
+              <p v-if="fail" style="color: red;"> {{ fail }}</p>
               <p>
                 Already have an account?
                 <RouterLink to="/login" class="link">Log in !</RouterLink>
@@ -65,7 +68,7 @@ const onFormSubmit = async ( { values }: any ) => {
   color: green;
 }
 
-.login-content {
+.signup-content {
   display: flex;
   align-items: center;
   min-height: 100vh;
