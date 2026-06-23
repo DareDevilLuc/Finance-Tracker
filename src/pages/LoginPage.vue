@@ -10,14 +10,18 @@ import { useRouter } from 'vue-router'
 
 const { signIn } = useAuth()
 
+const router = useRouter()
+
 const success = ref('')
 const fail = ref('')
 
-const onFormSubmit = async ({ value }: any) => {
+const onFormSubmit = async ({ values }: any) => {
   try {
-    await signIn(value.email, value.password)
+    await signIn(values.email, values.password)
+    success.value = 'Sign in successful !'
+    router.push('/main')
   } catch (e: any) {
-
+    fail.value = e.message
   }
 }
 
@@ -44,7 +48,7 @@ const onFormSubmit = async ({ value }: any) => {
               <p v-if="fail" style="color: red;"> {{ fail }}</p>
               <p>
                 Don't have an account yet?
-                <RouterLink to="/signup" class="link">Log in !</RouterLink>
+                <RouterLink to="/signup" class="link">Sign up !</RouterLink>
               </p>
 
             </div>
