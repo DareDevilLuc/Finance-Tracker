@@ -17,7 +17,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const { signOut } = useAuth()
+const { signOut, user} = useAuth()
 
 const date = ref()
 const visible = ref(false)
@@ -31,6 +31,24 @@ const transactions = ref([
 const handleSignout = async () => {
   await signOut()
   router.push('/login')
+}
+
+const fail = ref('')
+
+const onFormSubmit = async ( { values } : any) => {
+  const dateSubmitted = values.date.toISOString().split('T')[0]
+  const { error } = await supabase
+  .from('transactions')
+  .insert({ user_id: user.value?.id,
+            amount: values.amount,
+            type: values.type,
+            date: dateSubmitted,
+            description: values.description
+  })
+
+  if(error) {
+    fail.value = error.message
+  }
 }
 
 </script>
@@ -92,7 +110,7 @@ const handleSignout = async () => {
     header="Add Allowance/Expense"
     :style="{ width: '25rem' }"
   >
-    <Form>
+    <Form @submit="onFormSubmit">
       <div class="dialog-section">
         <label for="description">Description</label>
         <InputText id="description" name="description" fluid />
@@ -109,6 +127,7 @@ const handleSignout = async () => {
         <Button type="submit" label="Submit" />
       </div>
     </Form>
+    <p v-if="fail">{{ fail }}</p>
   </Dialog>
 </template>
 
