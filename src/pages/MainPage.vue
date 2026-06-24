@@ -12,6 +12,12 @@ import Dialog from 'primevue/dialog'
 import Select from 'primevue/select'
 import Tag from 'primevue/tag'
 import { Form } from '@primevue/forms'
+import { useAuth } from '@/composables/useAuth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const { signOut } = useAuth()
 
 const date = ref()
 const visible = ref(false)
@@ -21,6 +27,12 @@ const transactions = ref([
   { amount: 500, date: '2026-06-19', type: 'Expense', description: 'Commute' },
   { amount: 100, date: '2026-06-20', type: 'Allowance', description: 'Daily Allowance' },
 ])
+
+const handleSignout = async () => {
+  await signOut()
+  router.push('/login')
+}
+
 </script>
 
 <template>
@@ -71,6 +83,7 @@ const transactions = ref([
         </template>
       </Card>
     </div>
+      <Button label="Log out" @click="handleSignout"/>
   </div>
 
   <Dialog
