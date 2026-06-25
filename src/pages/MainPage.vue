@@ -14,10 +14,13 @@ import Tag from 'primevue/tag'
 import { Form } from '@primevue/forms'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
+import { useTransactions } from '@/composables/useTransactions'
 
 const router = useRouter()
 
-const { signOut, user} = useAuth()
+const { newTransaction } = useTransactions()
+
+const { signOut, user } = useAuth()
 
 const date = ref()
 const visible = ref(false)
@@ -34,20 +37,16 @@ const handleSignout = async () => {
 }
 
 const fail = ref('')
+const succes = ref('')
 
-const onFormSubmit = async ( { values } : any) => {
+const onFormSubmit = async ({ values }: any) => {
   const dateSubmitted = values.date.toISOString().split('T')[0]
-  const { error } = await supabase
-  .from('transactions')
-  .insert({ user_id: user.value?.id,
-            amount: values.amount,
-            type: values.type,
-            date: dateSubmitted,
-            description: values.description
-  })
-
-  if(error) {
-    fail.value = error.message
+  try {
+    await newTransaction(values.amount, values.type, dateSubmitted, values.description)
+    succes.value = "New transaction added."
+  }
+  catch(e : any){
+    fail.value = e.message
   }
 }
 
@@ -70,14 +69,7 @@ const onFormSubmit = async ( { values } : any) => {
       <Card>
         <template #content>
           <div class="month-button">
-            <DatePicker
-              v-model="date"
-              showIcon
-              fluid
-              iconDisplay="input"
-              dateFormat="mm/yy"
-              view="month"
-            />
+            <DatePicker v-model="date" showIcon fluid iconDisplay="input" dateFormat="mm/yy" view="month" />
             <Button label="Add Allowance/Expense" @click="visible = true" />
           </div>
         </template>
@@ -89,10 +81,7 @@ const onFormSubmit = async ( { values } : any) => {
             <Column field="date" header="Date" />
             <Column field="type" header="Type">
               <template #body="{ data }">
-                <Tag
-                  :value="data.type"
-                  :severity="data.type === 'Expense' ? 'danger' : 'success'"
-                />
+                <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
               </template>
             </Column>
             <Column field="amount" header="Amount" />
@@ -101,15 +90,10 @@ const onFormSubmit = async ( { values } : any) => {
         </template>
       </Card>
     </div>
-      <Button label="Log out" @click="handleSignout"/>
+    <Button label="Log out" @click="handleSignout" />
   </div>
 
-  <Dialog
-    v-model:visible="visible"
-    modal
-    header="Add Allowance/Expense"
-    :style="{ width: '25rem' }"
-  >
+  <Dialog v-model:visible="visible" modal header="Add Allowance/Expense" :style="{ width: '25rem' }">
     <Form @submit="onFormSubmit">
       <div class="dialog-section">
         <label for="description">Description</label>
@@ -128,6 +112,7 @@ const onFormSubmit = async ( { values } : any) => {
       </div>
     </Form>
     <p v-if="fail">{{ fail }}</p>
+    <p v-if="succes">{{ succes }}</p>
   </Dialog>
 </template>
 
