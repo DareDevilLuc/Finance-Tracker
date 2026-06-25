@@ -18,7 +18,7 @@ export function useTransactions() {
 
     const newTransaction = async (amount: string, type: string, dateSubmitted: string, description: string) => {
 
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('transactions')
             .insert({
                 user_id: user.value?.id,
@@ -27,10 +27,8 @@ export function useTransactions() {
                 date: dateSubmitted,
                 description: description
             })
-        
-        if (error) throw error
 
-        return data
+        if (error) throw error
     }
 
     return { newTransaction }
