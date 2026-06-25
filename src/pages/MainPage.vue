@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { supabase } from '../utils/supabase'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
@@ -18,18 +18,28 @@ import { useTransactions } from '@/composables/useTransactions'
 
 const router = useRouter()
 
-const { newTransaction } = useTransactions()
+const { fetchTransactions, newTransaction } = useTransactions()
 
 const { signOut, user } = useAuth()
 
-const date = ref()
+const date = ref(new Date())
+const filtereDate = computed(() => {
+  return `${date.value.getFullYear()}-${String(date.value.getMonth() + 1).padStart(2, "0")}`
+})
 const visible = ref(false)
 const types = ref(['Allowance', 'Expense'])
 
-const transactions = ref([
-  { amount: 500, date: '2026-06-19', type: 'Expense', description: 'Commute' },
-  { amount: 100, date: '2026-06-20', type: 'Allowance', description: 'Daily Allowance' },
-])
+const transactions = ref<any[]>([])
+onMounted( async () => {
+  transactions.value = await fetchTransactions()
+})
+
+
+const filteredTransactions = computed(() => {
+  return transactions.value.filter(
+    transaction => filtereDate.value === transaction.date.slice(0, 7)
+  )
+})
 
 const handleSignout = async () => {
   await signOut()
@@ -40,15 +50,19 @@ const fail = ref('')
 const succes = ref('')
 
 const onFormSubmit = async ({ values }: any) => {
-  const dateSubmitted = values.date.toISOString().split('T')[0]
+  const dateSubmitted = values.date.toLocaleDateString('en-CA')
   try {
     await newTransaction(values.amount, values.type, dateSubmitted, values.description)
     succes.value = "New transaction added."
   }
-  catch(e : any){
+  catch (e: any) {
     fail.value = e.message
   }
 }
+
+watch(date, (newDate) => {
+  console.log(newDate.toLocaleString('en-CA').slice(0, 7))
+})
 
 </script>
 
@@ -77,7 +91,7 @@ const onFormSubmit = async ({ values }: any) => {
 
       <Card>
         <template #content>
-          <DataTable tableStyle="min-width: 50rem" :value="transactions">
+          <DataTable tableStyle="min-width: 50rem" :value="filteredTransactions">
             <Column field="date" header="Date" />
             <Column field="type" header="Type">
               <template #body="{ data }">

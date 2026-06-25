@@ -31,5 +31,5 @@ export function useTransactions() {
         if (error) throw error
     }
 
-    return { newTransaction }
+    return { fetchTransactions, newTransaction }
 }
