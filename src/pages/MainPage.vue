@@ -30,8 +30,24 @@ const visible = ref(false)
 const types = ref(['Allowance', 'Expense'])
 
 const transactions = ref<any[]>([])
-onMounted( async () => {
+onMounted(async () => {
   transactions.value = await fetchTransactions()
+})
+
+const allowanceTotal = computed(() => {
+  return transactions.value.reduce((accumulator, item) => {
+    if (item.type === 'Allowance') {
+      return accumulator + item.amount
+    } else { return accumulator }
+  }, 0)
+})
+
+const expenseTotal = computed(() => {
+  return transactions.value.reduce((accumulator, item) => {
+    if (item.type === 'Expense') {
+      return accumulator + item.amount
+    } else { return accumulator }
+  }, 0)
 })
 
 
@@ -70,12 +86,18 @@ watch(date, (newDate) => {
   <div class="app-content">
     <div class="top-section">
       <Card>
-        <template #title>Current Amount (PHP)</template>
-        <template #content> </template>
+        <template #title>
+          Current Amount (PHP)
+        </template>
+        <template #content>
+          <p>{{ allowanceTotal }}</p>
+        </template>
       </Card>
       <Card>
         <template #title>Amount Spent (PHP)</template>
-        <template #content> </template>
+        <template #content>
+          <p> {{ expenseTotal }}</p>
+        </template>
       </Card>
     </div>
 
