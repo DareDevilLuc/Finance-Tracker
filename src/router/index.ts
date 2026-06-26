@@ -10,17 +10,16 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/auth',
       component: AuthLayout,
       children: [
-        { path: '', redirect: '/signup' },
         { path: 'login', component: LoginPage },
         { path: 'signup', component: SignupPage },
       ],
     },
 
     {
-      path: '/main',
+      path: '/',
       component: MainPage,
       meta : { requiresAuth: true }
     },
@@ -33,7 +32,9 @@ router.beforeEach(async (to) => {
   } = await supabase.auth.getSession()
 
 
-  if(to.meta.requiresAuth && !session) { return '/login' }
+  if(to.meta.requiresAuth && !session) { return '/auth/login' }
+
+  if(!to.meta.requiresAuth && session) { return '/' }
 })
 
 export default router

@@ -20,7 +20,7 @@ const router = useRouter()
 
 const { fetchTransactions, newTransaction } = useTransactions()
 
-const { signOut, user } = useAuth()
+const { signOut } = useAuth()
 
 const date = ref(new Date())
 const filtereDate = computed(() => {
@@ -55,6 +55,22 @@ const filteredTransactions = computed(() => {
   return transactions.value.filter(
     transaction => filtereDate.value === transaction.date.slice(0, 7)
   )
+})
+
+const allowanceMonthTotal = computed(() => {
+  return filteredTransactions.value.reduce((accumulator, item) => {
+    if (item.type === 'Allowance') {
+      return accumulator + item.amount
+    } else { return accumulator }
+  }, 0)
+})
+
+const expenseMonthTotal = computed(() => {
+  return filteredTransactions.value.reduce((accumulator, item) => {
+    if (item.type === 'Expense') {
+      return accumulator + item.amount
+    } else { return accumulator }
+  }, 0)
 })
 
 const handleSignout = async () => {
@@ -96,7 +112,7 @@ watch(date, (newDate) => {
       <Card>
         <template #title>Amount Spent (PHP)</template>
         <template #content>
-          <p> {{ expenseTotal }}</p>
+          <p>{{ expenseTotal }}</p>
         </template>
       </Card>
     </div>
@@ -123,6 +139,8 @@ watch(date, (newDate) => {
             <Column field="amount" header="Amount" />
             <Column field="description" header="Description" />
           </DataTable>
+          <p>Current Month's Total Allowance: {{ allowanceMonthTotal }}</p>
+          <p>Current Month's Total Expense: {{ expenseMonthTotal }}</p>
         </template>
       </Card>
     </div>
