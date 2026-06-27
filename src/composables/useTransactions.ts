@@ -10,6 +10,7 @@ export function useTransactions() {
             .from('transactions')
             .select('date, type, amount, description')
             .eq('user_id', user.value?.id)
+            .order('date', { ascending: true })
 
         if (error) throw error
 
@@ -18,7 +19,7 @@ export function useTransactions() {
 
     const newTransaction = async (amount: string, type: string, dateSubmitted: string, description: string) => {
 
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('transactions')
             .insert({
                 user_id: user.value?.id,
@@ -27,8 +28,11 @@ export function useTransactions() {
                 date: dateSubmitted,
                 description: description
             })
+            .select()
 
         if (error) throw error
+
+        return data[0] // returns only inserted row
     }
 
     return { fetchTransactions, newTransaction }

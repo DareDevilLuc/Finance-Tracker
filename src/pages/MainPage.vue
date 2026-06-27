@@ -58,7 +58,11 @@ const differenceTotal = computed(() => {
 const filteredTransactions = computed(() => {
   return transactions.value.filter(
     transaction => filtereDate.value === transaction.date.slice(0, 7)
-  )
+  ).sort((a, b) => {
+      if (a.date > b.date) { return 1 }
+      if (a.date < b.date) { return -1 }
+      return 0
+    })
 })
 
 const allowanceMonthTotal = computed(() => {
@@ -92,7 +96,13 @@ const succes = ref('')
 const onFormSubmit = async ({ values }: any) => {
   const dateSubmitted = values.date.toLocaleDateString('en-CA')
   try {
-    await newTransaction(values.amount, values.type, dateSubmitted, values.description)
+    const newSubmittedTransaction = await newTransaction(values.amount, values.type, dateSubmitted, values.description)
+    transactions.value.push(newSubmittedTransaction)
+    transactions.value.sort((a, b) => {
+      if (a.date > b.date) { return 1 }
+      if (a.date < b.date) { return -1 }
+      return 0
+    })
     succes.value = "New transaction added."
   }
   catch (e: any) {
