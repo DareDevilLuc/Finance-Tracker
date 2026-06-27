@@ -50,6 +50,10 @@ const expenseTotal = computed(() => {
   }, 0)
 })
 
+const differenceTotal = computed(() => {
+  return allowanceTotal.value - expenseTotal.value
+})
+
 
 const filteredTransactions = computed(() => {
   return transactions.value.filter(
@@ -71,6 +75,10 @@ const expenseMonthTotal = computed(() => {
       return accumulator + item.amount
     } else { return accumulator }
   }, 0)
+})
+
+const differenceMonthTotal = computed(() => {
+  return allowanceMonthTotal.value - expenseMonthTotal.value
 })
 
 const handleSignout = async () => {
@@ -115,6 +123,12 @@ watch(date, (newDate) => {
           <p>{{ expenseTotal }}</p>
         </template>
       </Card>
+      <Card>
+        <template #title>Net Gain/Loss (PHP)</template>
+        <template #content>
+          <p>{{ differenceTotal }}</p>
+        </template>
+      </Card>
     </div>
 
     <div class="data-section">
@@ -141,6 +155,7 @@ watch(date, (newDate) => {
           </DataTable>
           <p>Current Month's Total Allowance: {{ allowanceMonthTotal }}</p>
           <p>Current Month's Total Expense: {{ expenseMonthTotal }}</p>
+          <p>Current Month's Total Gain/Loss: {{ differenceMonthTotal }}</p>
         </template>
       </Card>
     </div>
