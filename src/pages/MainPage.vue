@@ -37,26 +37,6 @@ onMounted(async () => {
   transactions.value = await fetchTransactions()
 })
 
-const allowanceTotal = computed(() => {
-  return transactions.value.reduce((accumulator, item) => {
-    if (item.type === 'Allowance') {
-      return accumulator + item.amount
-    } else { return accumulator }
-  }, 0)
-})
-
-const expenseTotal = computed(() => {
-  return transactions.value.reduce((accumulator, item) => {
-    if (item.type === 'Expense') {
-      return accumulator + item.amount
-    } else { return accumulator }
-  }, 0)
-})
-
-const differenceTotal = computed(() => {
-  return allowanceTotal.value - expenseTotal.value
-})
-
 
 const filteredTransactions = computed(() => {
   return transactions.value.filter(
@@ -138,37 +118,42 @@ const handleDeleteTransaction = async (data: any) => {
     <div style="margin-right: auto ;">
       <h1>Personal Finance Tracker</h1>
     </div>
+    <div style="display: flex; flex-direction: row; gap: 3rem;">
+      <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
+        <template #title><span style="color: #0F6E56;">Month's Allowance (PHP)</span></template>
+        <template #content>
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <p style="font-size: xx-large; margin: 0; color: #085041;">₱{{ allowanceMonthTotal }}</p>
+            <Tag icon="pi pi-arrow-up" style="background: #9fe1cb; color: #05362e; margin-right: auto;"
+              value="Monthly Allowance" />
+          </div>
+        </template>
+      </Card>
+
+      <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
+        <template #title><span style="color: #A32D2D;">Month's Expense (PHP)</span></template>
+        <template #content>
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <p style="font-size: xx-large; margin: 0; color: #791F1F;">₱<span v-if="expenseMonthTotal > 0">-</span>{{
+              expenseMonthTotal }}</p>
+            <Tag icon="pi pi-arrow-down" style="background: #f7c1c1; color: #571a1a; margin-right: auto;"
+              value="Monthly Expenses" />
+          </div>
+        </template>
+      </Card>
+
+      <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
+        <template #title><span style="color: #185FA5;">Month's Net Gain/Loss (PHP)</span></template>
+        <template #content>
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <p style="font-size: xx-large; margin: 0; color: #0C447C;">₱{{ differenceMonthTotal }}</p>
+            <Tag icon="pi pi-chart-line" style="background: #b5d4f4; color: #173d64; margin-right: auto;"
+              value="Monthly Net" />
+          </div>
+        </template>
+      </Card>
+    </div>
     <div class="whole-section">
-      <div class="summary-cards">
-        <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
-          <template #title>
-            <span style="color: #0F6E56;">Current Amount (PHP)</span>
-          </template>
-          <template #content>
-            <p style="color: #085041;">{{ allowanceTotal }}</p>
-          </template>
-        </Card>
-
-        <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
-          <template #title>
-            <span style="color: #A32D2D;">Amount Spent (PHP)</span>
-          </template>
-          <template #content>
-            <p style="color: #791F1F;">{{ expenseTotal }}</p>
-          </template>
-        </Card>
-
-        <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
-          <template #title>
-            <span style="color: #185FA5;">Net Gain/Loss (PHP)</span>
-          </template>
-          <template #content>
-            <p style="color: #0C447C;">{{ differenceTotal }}</p>
-          </template>
-        </Card>
-      </div>
-
-
       <Card>
         <template #content>
           <div class="data-section">
@@ -176,61 +161,28 @@ const handleDeleteTransaction = async (data: any) => {
               <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
               <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="visible = true" />
             </div>
-            <DataTable tableStyle="min-width: 45rem" :value="filteredTransactions" paginator :rows="3">
-              <Column field="date" header="Date" />
-              <Column field="type" header="Type">
-                <template #body="{ data }">
-                  <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
-                </template>
-              </Column>
-              <Column field="amount" header="Amount" />
-              <Column field="description" header="Description" />
-              <Column header="Actions">
-                <template #body="{ data }">
-                  <Button icon="pi pi-trash" rounded severity="danger" text @click="handleDeleteTransaction(data)" />
-                </template>
-              </Column>
-              <template #empty>
-                <div class="empty-table">
-                  <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true" />
-                  <p style="font-weight: lighter;">Currently no transactions placed for this month</p>
-                </div>
-              </template>
-            </DataTable>
-            <div style="display: flex; flex-direction: row; gap: 3rem;">
-              <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
-                <template #title><span style="color: #0F6E56;">Month's Allowance (PHP)</span></template>
-                <template #content>
-                  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <p style="font-size: xx-large; margin: 0; color: #085041;">₱{{ allowanceMonthTotal }}</p>
-                    <Tag icon="pi pi-arrow-up" style="background: #9fe1cb; color: #05362e; margin-right: auto;"
-                      value="Monthly Allowance" />
+            <div>
+              <DataTable tableStyle="min-width: 100%" :value="filteredTransactions" paginator :rows="3">
+                <Column field="date" header="Date" />
+                <Column field="type" header="Type">
+                  <template #body="{ data }">
+                    <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
+                  </template>
+                </Column>
+                <Column field="amount" header="Amount" />
+                <Column field="description" header="Description" />
+                <Column header="Actions">
+                  <template #body="{ data }">
+                    <Button icon="pi pi-trash" rounded severity="danger" text @click="handleDeleteTransaction(data)" />
+                  </template>
+                </Column>
+                <template #empty>
+                  <div class="empty-table">
+                    <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true" />
+                    <p style="font-weight: lighter;">Currently no transactions placed for this month</p>
                   </div>
                 </template>
-              </Card>
-
-              <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
-                <template #title><span style="color: #A32D2D;">Month's Expense (PHP)</span></template>
-                <template #content>
-                  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <p style="font-size: xx-large; margin: 0; color: #791F1F;">₱<span
-                        v-if="expenseMonthTotal > 0">-</span>{{ expenseMonthTotal }}</p>
-                    <Tag icon="pi pi-arrow-down" style="background: #f7c1c1; color: #571a1a; margin-right: auto;"
-                      value="Monthly Expenses" />
-                  </div>
-                </template>
-              </Card>
-
-              <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
-                <template #title><span style="color: #185FA5;">Month's Net Gain/Loss (PHP)</span></template>
-                <template #content>
-                  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                    <p style="font-size: xx-large; margin: 0; color: #0C447C;">₱{{ differenceMonthTotal }}</p>
-                    <Tag icon="pi pi-chart-line" style="background: #b5d4f4; color: #173d64; margin-right: auto;"
-                      value="Monthly Net" />
-                  </div>
-                </template>
-              </Card>
+              </DataTable>
             </div>
           </div>
         </template>
