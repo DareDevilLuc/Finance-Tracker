@@ -121,40 +121,49 @@ const handleDeleteTransaction = async (data: any) => {
   console.log(data)
   try {
     await deleteTransaction(data.id)
-    toast.add({ summary: 'Delete successful', severity: 'success' })
+    toast.add({ summary: 'Delete successful', severity: 'success', life: 2000 })
     transactions.value = transactions.value.filter(
       transaction => transaction.id !== data.id
     )
   } catch (e: any) {
-    toast.add({ summary: 'Something wrong has occured, try again', severity: 'error' })
+    toast.add({ summary: 'Something wrong has occured, try again', severity: 'error', life: 2000 })
   }
 }
 
 </script>
 
 <template>
-  <Toast/>
+  <Toast />
   <div class="app-content">
+    <div style="margin-right: auto ;">
+      <h1>Personal Finance Tracker</h1>
+    </div>
     <div class="whole-section">
       <div class="summary-cards">
-        <Card>
+        <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
           <template #title>
-            Current Amount (PHP)
+            <span style="color: #0F6E56;">Current Amount (PHP)</span>
           </template>
           <template #content>
-            <p>{{ allowanceTotal }}</p>
-          </template>
-        </Card>
-        <Card>
-          <template #title>Amount Spent (PHP)</template>
-          <template #content>
-            <p>{{ expenseTotal }}</p>
+            <p style="color: #085041;">{{ allowanceTotal }}</p>
           </template>
         </Card>
-        <Card>
-          <template #title>Net Gain/Loss (PHP)</template>
+
+        <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
+          <template #title>
+            <span style="color: #A32D2D;">Amount Spent (PHP)</span>
+          </template>
           <template #content>
-            <p>{{ differenceTotal }}</p>
+            <p style="color: #791F1F;">{{ expenseTotal }}</p>
+          </template>
+        </Card>
+
+        <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
+          <template #title>
+            <span style="color: #185FA5;">Net Gain/Loss (PHP)</span>
+          </template>
+          <template #content>
+            <p style="color: #0C447C;">{{ differenceTotal }}</p>
           </template>
         </Card>
       </div>
@@ -163,8 +172,11 @@ const handleDeleteTransaction = async (data: any) => {
       <Card>
         <template #content>
           <div class="data-section">
-            <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
-            <DataTable tableStyle="min-width: 50rem" :value="filteredTransactions" paginator :rows="3">
+            <div class="toolbar">
+              <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
+              <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="visible = true" />
+            </div>
+            <DataTable tableStyle="min-width: 45rem" :value="filteredTransactions" paginator :rows="3">
               <Column field="date" header="Date" />
               <Column field="type" header="Type">
                 <template #body="{ data }">
@@ -178,14 +190,48 @@ const handleDeleteTransaction = async (data: any) => {
                   <Button icon="pi pi-trash" rounded severity="danger" text @click="handleDeleteTransaction(data)" />
                 </template>
               </Column>
-                <template #empty>
-                  <div class="empty-table">
-                    <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true"/>
-                    <p style="font-weight: bold;">Currently no transactions placed</p>
+              <template #empty>
+                <div class="empty-table">
+                  <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true" />
+                  <p style="font-weight: lighter;">Currently no transactions placed for this month</p>
+                </div>
+              </template>
+            </DataTable>
+            <div style="display: flex; flex-direction: row; gap: 3rem;">
+              <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
+                <template #title><span style="color: #0F6E56;">Month's Allowance (PHP)</span></template>
+                <template #content>
+                  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <p style="font-size: xx-large; margin: 0; color: #085041;">₱{{ allowanceMonthTotal }}</p>
+                    <Tag icon="pi pi-arrow-up" style="background: #9fe1cb; color: #05362e; margin-right: auto;"
+                      value="Monthly Allowance" />
                   </div>
                 </template>
-            </DataTable>
-            <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="visible = true"/>
+              </Card>
+
+              <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
+                <template #title><span style="color: #A32D2D;">Month's Expense (PHP)</span></template>
+                <template #content>
+                  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <p style="font-size: xx-large; margin: 0; color: #791F1F;">₱<span
+                        v-if="expenseMonthTotal > 0">-</span>{{ expenseMonthTotal }}</p>
+                    <Tag icon="pi pi-arrow-down" style="background: #f7c1c1; color: #571a1a; margin-right: auto;"
+                      value="Monthly Expenses" />
+                  </div>
+                </template>
+              </Card>
+
+              <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
+                <template #title><span style="color: #185FA5;">Month's Net Gain/Loss (PHP)</span></template>
+                <template #content>
+                  <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <p style="font-size: xx-large; margin: 0; color: #0C447C;">₱{{ differenceMonthTotal }}</p>
+                    <Tag icon="pi pi-chart-line" style="background: #b5d4f4; color: #173d64; margin-right: auto;"
+                      value="Monthly Net" />
+                  </div>
+                </template>
+              </Card>
+            </div>
           </div>
         </template>
       </Card>
@@ -241,7 +287,16 @@ const handleDeleteTransaction = async (data: any) => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  align-items: flex-start;
+}
+
+.toolbar {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.toolbar .p-button {
+  margin-left: auto;
 }
 
 .dialog-section {
