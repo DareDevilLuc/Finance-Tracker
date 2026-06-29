@@ -59,10 +59,10 @@ const filteredTransactions = computed(() => {
   return transactions.value.filter(
     transaction => filtereDate.value === transaction.date.slice(0, 7)
   ).sort((a, b) => {
-      if (a.date > b.date) { return 1 }
-      if (a.date < b.date) { return -1 }
-      return 0
-    })
+    if (a.date > b.date) { return 1 }
+    if (a.date < b.date) { return -1 }
+    return 0
+  })
 })
 
 const allowanceMonthTotal = computed(() => {
@@ -118,57 +118,51 @@ watch(date, (newDate) => {
 
 <template>
   <div class="app-content">
-    <div class="top-section">
-      <Card>
-        <template #title>
-          Current Amount (PHP)
-        </template>
-        <template #content>
-          <p>{{ allowanceTotal }}</p>
-        </template>
-      </Card>
-      <Card>
-        <template #title>Amount Spent (PHP)</template>
-        <template #content>
-          <p>{{ expenseTotal }}</p>
-        </template>
-      </Card>
-      <Card>
-        <template #title>Net Gain/Loss (PHP)</template>
-        <template #content>
-          <p>{{ differenceTotal }}</p>
-        </template>
-      </Card>
-    </div>
+    <div class="whole-section">
+      <div class="summary-cards">
+        <Card>
+          <template #title>
+            Current Amount (PHP)
+          </template>
+          <template #content>
+            <p>{{ allowanceTotal }}</p>
+          </template>
+        </Card>
+        <Card>
+          <template #title>Amount Spent (PHP)</template>
+          <template #content>
+            <p>{{ expenseTotal }}</p>
+          </template>
+        </Card>
+        <Card>
+          <template #title>Net Gain/Loss (PHP)</template>
+          <template #content>
+            <p>{{ differenceTotal }}</p>
+          </template>
+        </Card>
+      </div>
 
-    <div class="data-section">
+
       <Card>
         <template #content>
-          <div class="month-button">
-            <DatePicker v-model="date" showIcon fluid iconDisplay="input" dateFormat="mm/yy" view="month" />
+          <div class="data-section">
+            <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
+            <DataTable tableStyle="min-width: 50rem" :value="filteredTransactions">
+              <Column field="date" header="Date" />
+              <Column field="type" header="Type">
+                <template #body="{ data }">
+                  <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
+                </template>
+              </Column>
+              <Column field="amount" header="Amount" />
+              <Column field="description" header="Description" />
+            </DataTable>
             <Button label="Add Allowance/Expense" @click="visible = true" />
           </div>
         </template>
       </Card>
-
-      <Card>
-        <template #content>
-          <DataTable tableStyle="min-width: 50rem" :value="filteredTransactions">
-            <Column field="date" header="Date" />
-            <Column field="type" header="Type">
-              <template #body="{ data }">
-                <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
-              </template>
-            </Column>
-            <Column field="amount" header="Amount" />
-            <Column field="description" header="Description" />
-          </DataTable>
-          <p>Current Month's Total Allowance: {{ allowanceMonthTotal }}</p>
-          <p>Current Month's Total Expense: {{ expenseMonthTotal }}</p>
-          <p>Current Month's Total Gain/Loss: {{ differenceMonthTotal }}</p>
-        </template>
-      </Card>
     </div>
+
     <Button label="Log out" @click="handleSignout" />
   </div>
 
@@ -203,7 +197,13 @@ watch(date, (newDate) => {
   gap: 2rem;
 }
 
-.top-section {
+.summary-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.whole-section {
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -211,14 +211,9 @@ watch(date, (newDate) => {
 
 .data-section {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
-}
-
-.month-button {
-  display: flex;
   flex-direction: column;
   gap: 1rem;
+  align-items: flex-start;
 }
 
 .dialog-section {

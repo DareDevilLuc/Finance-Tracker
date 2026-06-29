@@ -22,5 +22,6 @@ const username = computed(() => user.value?.user_metadata.username)
 .content {
   display: flex;
   justify-content: center;
+  margin-top: 1rem;
 }
 </style>
