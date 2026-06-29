@@ -13,9 +13,11 @@ const username = computed(() => user.value?.user_metadata.username)
 <template>
 
   <div class="content">
+    <div class="">
+      <p v-if="user">{{ username }}</p>
+      <p v-else>Not logged in.</p>
+    </div>
     <RouterView />
-    <p v-if="user">{{ username }}</p>
-    <p v-else>Not logged in.</p>
   </div>
 </template>
 
@@ -23,6 +25,8 @@ const username = computed(() => user.value?.user_metadata.username)
 .content {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 1rem;
+  flex-direction: column;
 }
 </style>

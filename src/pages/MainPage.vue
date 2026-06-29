@@ -164,7 +164,7 @@ const handleDeleteTransaction = async (data: any) => {
         <template #content>
           <div class="data-section">
             <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
-            <DataTable tableStyle="min-width: 50rem" :value="filteredTransactions">
+            <DataTable tableStyle="min-width: 50rem" :value="filteredTransactions" paginator :rows="3">
               <Column field="date" header="Date" />
               <Column field="type" header="Type">
                 <template #body="{ data }">
