@@ -87,7 +87,7 @@ const differenceMonthTotal = computed(() => {
 
 const handleSignout = async () => {
   await signOut()
-  router.push('/login')
+  router.push('/auth/login')
 }
 
 const fail = ref('')

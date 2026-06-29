@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { Form } from '@primevue/forms'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
 
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
@@ -40,7 +41,7 @@ const onFormSubmit = async ({ values }: any) => {
               <InputText id="email" name="email" fluid />
 
               <label for="password">Password</label>
-              <InputText id="password" name="password" fluid />
+              <Password id="password" name="password" fluid :feedback="false"/>
 
               <Button type="submit" label="Submit" />
 
@@ -48,7 +49,7 @@ const onFormSubmit = async ({ values }: any) => {
               <p v-if="fail" style="color: red;"> {{ fail }}</p>
               <p>
                 Don't have an account yet?
-                <RouterLink to="/signup" class="link">Sign up !</RouterLink>
+                <RouterLink to="/auth/signup" class="link">Sign up !</RouterLink>
               </p>
 
             </div>
