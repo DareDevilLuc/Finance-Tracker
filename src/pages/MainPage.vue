@@ -178,8 +178,14 @@ const handleDeleteTransaction = async (data: any) => {
                   <Button icon="pi pi-trash" rounded severity="danger" text @click="handleDeleteTransaction(data)" />
                 </template>
               </Column>
+                <template #empty>
+                  <div class="empty-table">
+                    <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true"/>
+                    <p style="font-weight: bold;">Currently no transactions placed</p>
+                  </div>
+                </template>
             </DataTable>
-            <Button label="Add Allowance/Expense" @click="visible = true" />
+            <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="visible = true"/>
           </div>
         </template>
       </Card>
@@ -242,5 +248,13 @@ const handleDeleteTransaction = async (data: any) => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.empty-table {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 1rem;
 }
 </style>

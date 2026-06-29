@@ -18,6 +18,7 @@
     "@primeicons/vue": "^8.0.0-alpha.1",
     "@primeuix/themes": "^2.0.3",
     "@primevue/forms": "^4.5.5",
+    "@primevue/themes": "^4.5.4",
     "@supabase/supabase-js": "^2.107.0",
     "pinia": "^3.0.4",
     "primeicons": "^7.0.0",
