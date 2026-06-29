@@ -19,7 +19,7 @@ const onFormSubmit = async ( { values }: any ) => {
   try {
     await signUp(values.email, values.password, values.username)
     success.value = "Sign up successful !"
-    router.push('/login')
+    router.push('/auth/login')
   } catch (e: any) {
     fail.value = e.message || 'Unable to sign up. Try again.'
   }
