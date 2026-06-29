@@ -11,6 +11,7 @@ const username = computed(() => user.value?.user_metadata.username)
 </script>
 
 <template>
+
   <div class="content">
     <RouterView />
     <p v-if="user">{{ username }}</p>

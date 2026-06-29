@@ -15,10 +15,13 @@ import { Form } from '@primevue/forms'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
 import { useTransactions } from '@/composables/useTransactions'
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/toast'
 
+const toast = useToast()
 const router = useRouter()
 
-const { fetchTransactions, newTransaction } = useTransactions()
+const { fetchTransactions, newTransaction, deleteTransaction } = useTransactions()
 
 const { signOut } = useAuth()
 
@@ -114,9 +117,23 @@ watch(date, (newDate) => {
   console.log(newDate.toLocaleString('en-CA').slice(0, 7))
 })
 
+const handleDeleteTransaction = async (data: any) => {
+  console.log(data)
+  try {
+    await deleteTransaction(data.id)
+    toast.add({ summary: 'Delete successful', severity: 'success' })
+    transactions.value = transactions.value.filter(
+      transaction => transaction.id !== data.id
+    )
+  } catch (e: any) {
+    toast.add({ summary: 'Something wrong has occured, try again', severity: 'error' })
+  }
+}
+
 </script>
 
 <template>
+  <Toast/>
   <div class="app-content">
     <div class="whole-section">
       <div class="summary-cards">
@@ -156,6 +173,11 @@ watch(date, (newDate) => {
               </Column>
               <Column field="amount" header="Amount" />
               <Column field="description" header="Description" />
+              <Column header="Actions">
+                <template #body="{ data }">
+                  <Button icon="pi pi-trash" rounded severity="danger" text @click="handleDeleteTransaction(data)" />
+                </template>
+              </Column>
             </DataTable>
             <Button label="Add Allowance/Expense" @click="visible = true" />
           </div>
