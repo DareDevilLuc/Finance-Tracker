@@ -11,12 +11,9 @@ const username = computed(() => user.value?.user_metadata.username)
 </script>
 
 <template>
-
   <div class="content">
-    <div class="">
-      <p v-if="user">{{ username }}</p>
-      <p v-else>Not logged in.</p>
-    </div>
+    <p v-if="user">{{ username }}</p>
+    <p v-else>Not logged in.</p>
     <RouterView />
   </div>
 </template>

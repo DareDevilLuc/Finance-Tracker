@@ -4,6 +4,7 @@ import MainPage from '@/pages/MainPage.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import LoginPage from '@/pages/LoginPage.vue'
 import SignupPage from '@/pages/SignupPage.vue'
+import MainLayoutTest from '@/layouts/MainLayoutTest.vue'
 
 
 const router = createRouter({
@@ -13,16 +14,20 @@ const router = createRouter({
       path: '/auth',
       component: AuthLayout,
       children: [
-        { path: 'login', component: LoginPage },
-        { path: 'signup', component: SignupPage },
+        { path: 'login', component: LoginPage, meta: { guestOnly: true }},
+        { path: 'signup', component: SignupPage, meta: {guestOnly: true } },
       ],
     },
 
     {
-      path: '/',
+      path: '/main',
       component: MainPage,
       meta : { requiresAuth: true }
     },
+    {
+      path: '/test',
+      component: MainLayoutTest
+    }
   ],
 })
 
@@ -34,7 +39,8 @@ router.beforeEach(async (to) => {
 
   if(to.meta.requiresAuth && !session) { return '/auth/login' }
 
-  if(!to.meta.requiresAuth && session) { return '/' }
+  if(to.meta.guestOnly && session) { return '/main' }
+
 })
 
 export default router
