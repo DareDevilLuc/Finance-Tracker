@@ -11,15 +11,20 @@ import Column from 'primevue/column'
 import Dialog from 'primevue/dialog'
 import Select from 'primevue/select'
 import Tag from 'primevue/tag'
+import ConfirmPopup from 'primevue/confirmpopup'
 import { Form } from '@primevue/forms'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
 import { useTransactions } from '@/composables/useTransactions'
 import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
+import { useConfirm } from 'primevue/useconfirm'
+import { label } from '@primeuix/themes/aura/metergroup'
+import { outlined } from '@primeuix/themes/aura/message'
 
 const toast = useToast()
 const router = useRouter()
+const confirm = useConfirm()
 
 const { fetchTransactions, newTransaction, deleteTransaction } = useTransactions()
 
@@ -110,86 +115,124 @@ const handleDeleteTransaction = async (data: any) => {
   }
 }
 
+const deleteConfirm = (event : any, data: any) => {
+  confirm.require({
+    target: event.currentTarget,
+    message: 'Delete this transaction?',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger'
+    },
+    accept: () => {
+      handleDeleteTransaction(data)
+    }
+
+  })
+}
+
 </script>
 
 <template>
   <Toast />
+  <ConfirmPopup></ConfirmPopup>
   <div class="app-content">
     <div style="margin-right: auto ;">
       <h1>Personal Finance Tracker</h1>
     </div>
-    <div style="display: flex; flex-direction: row; gap: 3rem;">
-      <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
-        <template #title><span style="color: #0F6E56;">Month's Allowance (PHP)</span></template>
-        <template #content>
-          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-            <p style="font-size: xx-large; margin: 0; color: #085041;">₱{{ allowanceMonthTotal }}</p>
-            <Tag icon="pi pi-arrow-up" style="background: #9fe1cb; color: #05362e; margin-right: auto;"
-              value="Monthly Allowance" />
-          </div>
-        </template>
-      </Card>
-
-      <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
-        <template #title><span style="color: #A32D2D;">Month's Expense (PHP)</span></template>
-        <template #content>
-          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-            <p style="font-size: xx-large; margin: 0; color: #791F1F;">₱<span v-if="expenseMonthTotal > 0">-</span>{{
-              expenseMonthTotal }}</p>
-            <Tag icon="pi pi-arrow-down" style="background: #f7c1c1; color: #571a1a; margin-right: auto;"
-              value="Monthly Expenses" />
-          </div>
-        </template>
-      </Card>
-
-      <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
-        <template #title><span style="color: #185FA5;">Month's Net Gain/Loss (PHP)</span></template>
-        <template #content>
-          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-            <p style="font-size: xx-large; margin: 0; color: #0C447C;">₱{{ differenceMonthTotal }}</p>
-            <Tag icon="pi pi-chart-line" style="background: #b5d4f4; color: #173d64; margin-right: auto;"
-              value="Monthly Net" />
-          </div>
-        </template>
-      </Card>
-    </div>
-    <div class="whole-section">
-      <Card>
-        <template #content>
-          <div class="data-section">
-            <div class="toolbar">
-              <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
-              <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="visible = true" />
+    <div class="grid-container">
+      <div style="grid-area: card1;">
+        <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
+          <template #title><span style="color: #0F6E56;">Month's Allowance (PHP)</span></template>
+          <template #content>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <p style="font-size: xx-large; margin: 0; color: #085041;">₱{{ allowanceMonthTotal }}</p>
+              <Tag icon="pi pi-arrow-up" style="background: #9fe1cb; color: #05362e; margin-right: auto;"
+                value="Monthly Allowance" />
             </div>
-            <div>
-              <DataTable tableStyle="min-width: 100%" :value="filteredTransactions" paginator :rows="3">
-                <Column field="date" header="Date" />
-                <Column field="type" header="Type">
-                  <template #body="{ data }">
-                    <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
-                  </template>
-                </Column>
-                <Column field="amount" header="Amount" />
-                <Column field="description" header="Description" />
-                <Column header="Actions">
-                  <template #body="{ data }">
-                    <Button icon="pi pi-trash" rounded severity="danger" text @click="handleDeleteTransaction(data)" />
-                  </template>
-                </Column>
-                <template #empty>
-                  <div class="empty-table">
-                    <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true" />
-                    <p style="font-weight: lighter;">Currently no transactions placed for this month</p>
-                  </div>
-                </template>
-              </DataTable>
+          </template>
+        </Card>
+      </div>
+
+      <div style="grid-area: card2;">
+        <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
+          <template #title><span style="color: #A32D2D;">Month's Expense (PHP)</span></template>
+          <template #content>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <p style="font-size: xx-large; margin: 0; color: #791F1F;">₱<span v-if="expenseMonthTotal > 0">-</span>{{
+                expenseMonthTotal }}</p>
+              <Tag icon="pi pi-arrow-down" style="background: #f7c1c1; color: #571a1a; margin-right: auto;"
+                value="Monthly Expenses" />
             </div>
-          </div>
-        </template>
-      </Card>
+          </template>
+        </Card>
+      </div>
+
+      <div style="grid-area: card3;">
+        <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
+          <template #title><span style="color: #185FA5;">Month's Net Gain/Loss (PHP)</span></template>
+          <template #content>
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+              <p style="font-size: xx-large; margin: 0; color: #0C447C;">₱{{ differenceMonthTotal }}</p>
+              <Tag icon="pi pi-chart-line" style="background: #b5d4f4; color: #173d64; margin-right: auto;"
+                value="Monthly Net/Loss" />
+            </div>
+          </template>
+        </Card>
+      </div>
+
+      <div style="grid-area: card4;">
+        <Card>
+          <template #content>
+            <div class="data-section">
+              <div class="toolbar">
+                <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
+                <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="visible = true" />
+              </div>
+              <div>
+                <DataTable tableStyle="min-width: 100%" :value="filteredTransactions" paginator :rows="3">
+                  <Column field="date" header="Date" />
+                  <Column field="type" header="Type">
+                    <template #body="{ data }">
+                      <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
+                    </template>
+                  </Column>
+                  <Column field="amount" header="Amount" />
+                  <Column field="description" header="Description" />
+                  <Column header="Actions">
+                    <template #body="{ data }">
+                      <Button icon="pi pi-trash" rounded severity="danger" text
+                        @click="deleteConfirm($event, data)" />
+                    </template>
+                  </Column>
+                  <template #empty>
+                    <div class="empty-table">
+                      <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true" />
+                      <p style="font-weight: lighter;">Currently no transactions placed for this month</p>
+                    </div>
+                  </template>
+                </DataTable>
+              </div>
+            </div>
+          </template>
+        </Card>
+      </div>
+
+      <div style="grid-area: card5;">
+        <Card>
+          <template #title>Overall Statistics</template>
+        </Card>
+      </div>
+
     </div>
 
-    <Button label="Log out" @click="handleSignout" />
+    <div style="display: flex; justify-content: center;">
+      <Button label="Log out" @click="handleSignout" />
+    </div>
   </div>
 
   <Dialog v-model:visible="visible" modal header="Add Allowance/Expense" :style="{ width: '25rem' }">
@@ -219,20 +262,16 @@ const handleDeleteTransaction = async (data: any) => {
 .app-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2rem;
 }
 
-.summary-cards {
-  display: flex;
-  flex-direction: column;
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-}
-
-.whole-section {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  grid-template-areas:
+    "card1 card2 card3 card5"
+    "card4 card4 card4 card5";
 }
 
 .data-section {

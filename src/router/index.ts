@@ -4,7 +4,7 @@ import MainPage from '@/pages/MainPage.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
 import LoginPage from '@/pages/LoginPage.vue'
 import SignupPage from '@/pages/SignupPage.vue'
-import MainLayoutTest from '@/layouts/MainLayoutTest.vue'
+import MainPageTest from '@/pages/MainPageTest.vue'
 
 
 const router = createRouter({
@@ -26,7 +26,7 @@ const router = createRouter({
     },
     {
       path: '/test',
-      component: MainLayoutTest
+      component: MainPageTest
     }
   ],
 })
