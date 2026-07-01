@@ -1,12 +1,14 @@
 <script setup lang="ts">
 
-import { chartData } from '../composables/chartConfig';
 import { Pie } from 'vue-chartjs';
 
+defineProps<{
+    data:any
+}>()
 </script>
 
 <template>
-    <Pie :data="chartData"/>
+    <Pie :data="data"/>
 </template>
 
 <style scoped></style>

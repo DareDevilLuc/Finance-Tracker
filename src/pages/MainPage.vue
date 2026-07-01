@@ -20,6 +20,12 @@ import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
 import { useConfirm } from 'primevue/useconfirm'
 import ExpensePieChart from '@/components/ExpensePieChart.vue'
+import {
+  Chart as ChartJs,
+  ArcElement,
+  Tooltip,
+  Legend
+} from 'chart.js'
 
 const toast = useToast()
 const router = useRouter()
@@ -40,6 +46,24 @@ const transactions = ref<any[]>([])
 onMounted(async () => {
   transactions.value = await fetchTransactions()
 })
+
+const allowanceOverallTotal = computed(() => {
+  return transactions.value.reduce((accumulator, item) => {
+    if(item.type === 'Allowance') {
+      return accumulator + item.amount
+    } else { return accumulator }
+  }, 0 )
+})
+
+const expenseOverallTotal = computed(() => {
+  return transactions.value.reduce((accumulator, item) => {
+    if(item.type === 'Expense') {
+      return accumulator + item.amount
+    } else { return accumulator }
+  }, 0)
+})
+
+const differenceOverall = computed(() => allowanceOverallTotal.value - expenseOverallTotal.value)
 
 
 const filteredTransactions = computed(() => {
@@ -136,13 +160,25 @@ const deleteConfirm = (event: any, data: any) => {
   })
 }
 
-const data = ref([
-  { channel: 'Direct sales', share: 38.4 },
-  { channel: 'Partner-led', share: 24.7 },
-  { channel: 'Marketplace', share: 18.9 },
-  { channel: 'Self-serve', share: 11.6 },
-  { channel: 'Expansion', share: 6.4 }
-]);
+ChartJs.register(
+  ArcElement,
+  Tooltip,
+  Legend
+)
+
+const chartData = computed(() => ({
+  labels: ['Allowance', 'Expense'],
+  datasets: [
+    {
+      data: [allowanceOverallTotal.value, expenseOverallTotal.value],
+      backgroundColor: [
+        '#9fe1cb',
+        '#f7c1c1',
+      ]
+    }
+  ],
+}))
+
 
 </script>
 
@@ -235,7 +271,8 @@ const data = ref([
         <Card>
           <template #title>Overall Statistics</template>
           <template #content>
-            <ExpensePieChart/>
+            <ExpensePieChart :data="chartData"/>
+            <p>{{ differenceOverall }}</p>
           </template>
         </Card>
       </div>
