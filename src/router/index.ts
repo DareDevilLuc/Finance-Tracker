@@ -22,6 +22,10 @@ const router = createRouter({
       path: '/main',
       component: MainPage,
       meta : { requiresAuth: true }
+    },
+    {
+      path: '/',
+      redirect: '/auth/signup'
     }
   ],
 })
