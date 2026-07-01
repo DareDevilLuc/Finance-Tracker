@@ -19,8 +19,7 @@ import { useTransactions } from '@/composables/useTransactions'
 import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
 import { useConfirm } from 'primevue/useconfirm'
-import { label } from '@primeuix/themes/aura/metergroup'
-import { outlined } from '@primeuix/themes/aura/message'
+import ExpensePieChart from '@/components/ExpensePieChart.vue'
 
 const toast = useToast()
 const router = useRouter()
@@ -91,11 +90,13 @@ const onFormSubmit = async ({ values }: any) => {
       if (a.date < b.date) { return -1 }
       return 0
     })
-    succes.value = "New transaction added."
+    toast.add({ summary: 'New transaction added', severity: 'success', group: 'bottom-center', life: 2000 })
   }
   catch (e: any) {
     fail.value = e.message
+    toast.add({ summary: fail.value, severity: 'danger', life: 2000, group: 'bottom-center' })
   }
+
 }
 
 watch(date, (newDate) => {
@@ -106,7 +107,7 @@ const handleDeleteTransaction = async (data: any) => {
   console.log(data)
   try {
     await deleteTransaction(data.id)
-    toast.add({ summary: 'Delete successful', severity: 'success', life: 2000 })
+    toast.add({ summary: 'Delete successful', severity: 'info', life: 2000 })
     transactions.value = transactions.value.filter(
       transaction => transaction.id !== data.id
     )
@@ -115,7 +116,7 @@ const handleDeleteTransaction = async (data: any) => {
   }
 }
 
-const deleteConfirm = (event : any, data: any) => {
+const deleteConfirm = (event: any, data: any) => {
   confirm.require({
     target: event.currentTarget,
     message: 'Delete this transaction?',
@@ -135,9 +136,18 @@ const deleteConfirm = (event : any, data: any) => {
   })
 }
 
+const data = ref([
+  { channel: 'Direct sales', share: 38.4 },
+  { channel: 'Partner-led', share: 24.7 },
+  { channel: 'Marketplace', share: 18.9 },
+  { channel: 'Self-serve', share: 11.6 },
+  { channel: 'Expansion', share: 6.4 }
+]);
+
 </script>
 
 <template>
+  <Toast position="bottom-center" group="bottom-center" />
   <Toast />
   <ConfirmPopup></ConfirmPopup>
   <div class="app-content">
@@ -205,8 +215,7 @@ const deleteConfirm = (event : any, data: any) => {
                   <Column field="description" header="Description" />
                   <Column header="Actions">
                     <template #body="{ data }">
-                      <Button icon="pi pi-trash" rounded severity="danger" text
-                        @click="deleteConfirm($event, data)" />
+                      <Button icon="pi pi-trash" rounded severity="danger" text @click="deleteConfirm($event, data)" />
                     </template>
                   </Column>
                   <template #empty>
@@ -225,6 +234,9 @@ const deleteConfirm = (event : any, data: any) => {
       <div style="grid-area: card5;">
         <Card>
           <template #title>Overall Statistics</template>
+          <template #content>
+            <ExpensePieChart/>
+          </template>
         </Card>
       </div>
 
@@ -253,8 +265,6 @@ const deleteConfirm = (event : any, data: any) => {
         <Button type="submit" label="Submit" />
       </div>
     </Form>
-    <p v-if="fail">{{ fail }}</p>
-    <p v-if="succes">{{ succes }}</p>
   </Dialog>
 </template>
 
