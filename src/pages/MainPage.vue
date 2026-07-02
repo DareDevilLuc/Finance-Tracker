@@ -26,6 +26,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+import Panel from 'primevue/panel';
+import Divider from 'primevue/divider';
 
 const toast = useToast()
 const router = useRouter()
@@ -49,15 +51,15 @@ onMounted(async () => {
 
 const allowanceOverallTotal = computed(() => {
   return transactions.value.reduce((accumulator, item) => {
-    if(item.type === 'Allowance') {
+    if (item.type === 'Allowance') {
       return accumulator + item.amount
     } else { return accumulator }
-  }, 0 )
+  }, 0)
 })
 
 const expenseOverallTotal = computed(() => {
   return transactions.value.reduce((accumulator, item) => {
-    if(item.type === 'Expense') {
+    if (item.type === 'Expense') {
       return accumulator + item.amount
     } else { return accumulator }
   }, 0)
@@ -271,8 +273,30 @@ const chartData = computed(() => ({
         <Card>
           <template #title>Overall Statistics</template>
           <template #content>
-            <ExpensePieChart :data="chartData"/>
-            <p>{{ differenceOverall }}</p>
+            <ExpensePieChart :data="chartData" />
+            <div style="margin-top: 4px;">
+              <Panel header="Summary">
+                <div style="display: flex; flex-direction: column;">
+                  <div
+                    style="display: flex; justify-content: space-between; background-color: #6deec1; color: #085041;">
+                    <span>Total Allowance</span>
+                    <span>₱{{ allowanceOverallTotal }}</span>
+                  </div>
+                  <div
+                    style="display: flex; justify-content: space-between; background-color: #fcebeb; color: #791f1f;">
+                    <span>Total Expense</span>
+                    <span>₱{{ expenseOverallTotal }}</span>
+                  </div>
+                  <Divider />
+                  <div
+                    style="display: flex; justify-content: space-between; background-color: #e6f1fb; color: #0c447c;">
+                    <span>Net Gain/Loss</span>
+                    <span>₱{{ differenceOverall }}</span>
+                  </div>
+                </div>
+              </Panel>
+            </div>
+
           </template>
         </Card>
       </div>
@@ -285,7 +309,7 @@ const chartData = computed(() => ({
   </div>
 
   <Dialog v-model:visible="visible" modal header="Add Allowance/Expense" :style="{ width: '25rem' }">
-    <Form @submit="onFormSubmit">
+    <Form @submit="onFormSubmit" autocomplete="off">
       <div class="dialog-section">
         <label for="description">Description</label>
         <InputText id="description" name="description" fluid />
