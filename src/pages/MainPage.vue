@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import MonthSummaryCard from '@/components/MonthSummaryCard.vue'
 import { ref, onMounted, watch, computed } from 'vue'
-import { supabase } from '../utils/supabase'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
 import Card from 'primevue/card'
@@ -194,43 +194,19 @@ const chartData = computed(() => ({
     </div>
     <div class="grid-container">
       <div style="grid-area: card1;">
-        <Card :pt="{ root: { style: 'background: #e1f5ee; border: none;' } }">
-          <template #title><span style="color: #0F6E56;">Month's Allowance (PHP)</span></template>
-          <template #content>
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-              <p style="font-size: xx-large; margin: 0; color: #085041;">₱{{ allowanceMonthTotal }}</p>
-              <Tag icon="pi pi-arrow-up" style="background: #9fe1cb; color: #05362e; margin-right: auto;"
-                value="Monthly Allowance" />
-            </div>
-          </template>
-        </Card>
+        <MonthSummaryCard cardBgColor="#e1f5ee" titleColor="#0F6E56" titleText="Month's Allowance (PHP)"
+          :amount="allowanceMonthTotal" numberColor="#085041" tagBgColor="#9fe1cb" tagIcon="pi pi-arrow-up"
+          tagFontColor="#05362e" tagText="Monthly Allowance" />
       </div>
-
       <div style="grid-area: card2;">
-        <Card :pt="{ root: { style: 'background: #fcebeb; border: none;' } }">
-          <template #title><span style="color: #A32D2D;">Month's Expense (PHP)</span></template>
-          <template #content>
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-              <p style="font-size: xx-large; margin: 0; color: #791F1F;">₱<span v-if="expenseMonthTotal > 0">-</span>{{
-                expenseMonthTotal }}</p>
-              <Tag icon="pi pi-arrow-down" style="background: #f7c1c1; color: #571a1a; margin-right: auto;"
-                value="Monthly Expenses" />
-            </div>
-          </template>
-        </Card>
+        <MonthSummaryCard cardBgColor="#fcebeb" titleColor="#A32D2D" titleText="Month's Expense (PHP)"
+          :amount="expenseMonthTotal" numberColor="#791F1F" tagBgColor="#f7c1c1" tagIcon="pi pi-arrow-down"
+          tagFontColor="#571a1a" tagText="Monthly Expenses" />
       </div>
-
       <div style="grid-area: card3;">
-        <Card :pt="{ root: { style: 'background: #e6f1fb; border: none;' } }">
-          <template #title><span style="color: #185FA5;">Month's Net Gain/Loss (PHP)</span></template>
-          <template #content>
-            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-              <p style="font-size: xx-large; margin: 0; color: #0C447C;">₱{{ differenceMonthTotal }}</p>
-              <Tag icon="pi pi-chart-line" style="background: #b5d4f4; color: #173d64; margin-right: auto;"
-                value="Monthly Net/Loss" />
-            </div>
-          </template>
-        </Card>
+        <MonthSummaryCard cardBgColor="#e6f1fb" titleColor="#185FA5" titleText="Month's Net Gain/Loss (PHP)"
+          :amount="differenceMonthTotal" numberColor="#0C447C" tagBgColor="#b5d4f4" tagIcon="pi pi-chart-line"
+          tagFontColor="#173d64" tagText="Monthly Net/Loss" />
       </div>
 
       <div style="grid-area: card4;">
@@ -285,7 +261,7 @@ const chartData = computed(() => ({
                   <div
                     style="display: flex; justify-content: space-between; background-color: #fcebeb; color: #791f1f;">
                     <span>Total Expense</span>
-                    <span>₱{{ expenseOverallTotal }}</span>
+                    <span>₱<span v-if="expenseOverallTotal">-</span>{{ expenseOverallTotal }}</span>
                   </div>
                   <Divider />
                   <div
