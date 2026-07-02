@@ -34,7 +34,7 @@ const onFormSubmit = async ( { values }: any ) => {
       <Card style="width: 25rem; display: flex; align-items: center; flex-direction: column">
         <template #title>Sign Up</template>
         <template #content>
-          <Form @submit="onFormSubmit">
+          <Form @submit="onFormSubmit" autocomplete="off">
             <div class="signup-section">
               <label for="username">Username</label>
               <InputText id="username" name="username" fluid />
