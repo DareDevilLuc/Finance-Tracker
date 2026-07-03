@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import MonthSummaryCard from '@/components/MonthSummaryCard.vue'
+import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 import { ref, onMounted, watch, computed } from 'vue'
-import InputNumber from 'primevue/inputnumber'
-import InputText from 'primevue/inputtext'
 import Card from 'primevue/card'
 import Button from 'primevue/button'
 import DatePicker from 'primevue/datepicker'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import Dialog from 'primevue/dialog'
-import Select from 'primevue/select'
 import Tag from 'primevue/tag'
 import ConfirmPopup from 'primevue/confirmpopup'
-import { Form } from '@primevue/forms'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
 import { useTransactions } from '@/composables/useTransactions'
@@ -106,23 +102,15 @@ const handleSignout = async () => {
 const fail = ref('')
 const succes = ref('')
 
-const onFormSubmit = async ({ values }: any) => {
-  const dateSubmitted = values.date.toLocaleDateString('en-CA')
-  try {
-    const newSubmittedTransaction = await newTransaction(values.amount, values.type, dateSubmitted, values.description)
-    transactions.value.push(newSubmittedTransaction)
-    transactions.value.sort((a, b) => {
-      if (a.date > b.date) { return 1 }
-      if (a.date < b.date) { return -1 }
-      return 0
-    })
-    toast.add({ summary: 'New transaction added', severity: 'success', group: 'bottom-center', life: 2000 })
-  }
-  catch (e: any) {
-    fail.value = e.message
-    toast.add({ summary: fail.value, severity: 'danger', life: 2000, group: 'bottom-center' })
-  }
 
+const handleNewTransaction = (transaction: any) => {
+  transactions.value.push(transaction)
+  transactions.value.sort((a, b) => {
+    if (a.date > b.date) { return 1 }
+    if (a.date < b.date) { return -1 }
+    return 0
+  })
+  toast.add({ summary: 'New transaction added', severity: 'success', group: 'bottom-center', life: 2000 })
 }
 
 watch(date, (newDate) => {
@@ -284,25 +272,7 @@ const chartData = computed(() => ({
     </div>
   </div>
 
-  <Dialog v-model:visible="visible" modal header="Add Allowance/Expense" :style="{ width: '25rem' }">
-    <Form @submit="onFormSubmit" autocomplete="off">
-      <div class="dialog-section">
-        <label for="description">Description</label>
-        <InputText id="description" name="description" fluid />
-
-        <label for="amount">Amount (PHP)</label>
-        <InputNumber id="amount" name="amount" fluid />
-
-        <label for="type">Select Type</label>
-        <Select id="type" name="type" :options="types" />
-
-        <label for="type">Select Date</label>
-        <DatePicker id="date" name="date" showIcon />
-
-        <Button type="submit" label="Submit" />
-      </div>
-    </Form>
-  </Dialog>
+  <AddTransactionDialog v-model:visible="visible" @submitted="handleNewTransaction" />
 </template>
 
 <style>
