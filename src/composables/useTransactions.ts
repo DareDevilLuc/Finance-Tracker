@@ -36,12 +36,15 @@ export function useTransactions() {
     }
 
     const deleteTransaction = async (id: string) => {
-        const { error } = await supabase
+        const { data, error } = await supabase
         .from('transactions')
         .delete()
         .eq('id', id)
+        .select()
 
         if(error) throw error
+
+        return data
     }
 
     return { fetchTransactions, newTransaction, deleteTransaction }

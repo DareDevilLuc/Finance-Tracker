@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MonthSummaryCard from '@/components/MonthSummaryCard.vue'
+import TransactionTable from '@/components/TransactionTable.vue'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
 import { ref, onMounted, watch, computed } from 'vue'
 import Card from 'primevue/card'
@@ -29,7 +30,7 @@ const toast = useToast()
 const router = useRouter()
 const confirm = useConfirm()
 
-const { fetchTransactions, newTransaction, deleteTransaction } = useTransactions()
+const { fetchTransactions } = useTransactions()
 
 const { signOut } = useAuth()
 
@@ -38,7 +39,6 @@ const filtereDate = computed(() => {
   return `${date.value.getFullYear()}-${String(date.value.getMonth() + 1).padStart(2, "0")}`
 })
 const visible = ref(false)
-const types = ref(['Allowance', 'Expense'])
 
 const transactions = ref<any[]>([])
 onMounted(async () => {
@@ -99,9 +99,6 @@ const handleSignout = async () => {
   router.push('/auth/login')
 }
 
-const fail = ref('')
-const succes = ref('')
-
 
 const handleNewTransaction = (transaction: any) => {
   transactions.value.push(transaction)
@@ -118,37 +115,12 @@ watch(date, (newDate) => {
 })
 
 const handleDeleteTransaction = async (data: any) => {
-  console.log(data)
-  try {
-    await deleteTransaction(data.id)
-    toast.add({ summary: 'Delete successful', severity: 'info', life: 2000 })
-    transactions.value = transactions.value.filter(
-      transaction => transaction.id !== data.id
-    )
-  } catch (e: any) {
-    toast.add({ summary: 'Something wrong has occured, try again', severity: 'error', life: 2000 })
-  }
+  toast.add({ summary: 'Delete Successful', severity: 'info', life: 2000 })
+  transactions.value = transactions.value.filter(
+    transaction => transaction.id !== data.id
+  )
 }
 
-const deleteConfirm = (event: any, data: any) => {
-  confirm.require({
-    target: event.currentTarget,
-    message: 'Delete this transaction?',
-    rejectProps: {
-      label: 'Cancel',
-      severity: 'secondary',
-      outlined: true
-    },
-    acceptProps: {
-      label: 'Delete',
-      severity: 'danger'
-    },
-    accept: () => {
-      handleDeleteTransaction(data)
-    }
-
-  })
-}
 
 ChartJs.register(
   ArcElement,
@@ -198,39 +170,8 @@ const chartData = computed(() => ({
       </div>
 
       <div style="grid-area: card4;">
-        <Card>
-          <template #content>
-            <div class="data-section">
-              <div class="toolbar">
-                <DatePicker v-model="date" showIcon iconDisplay="input" dateFormat="mm/yy" view="month" />
-                <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="visible = true" />
-              </div>
-              <div>
-                <DataTable tableStyle="min-width: 100%" :value="filteredTransactions" paginator :rows="3">
-                  <Column field="date" header="Date" />
-                  <Column field="type" header="Type">
-                    <template #body="{ data }">
-                      <Tag :value="data.type" :severity="data.type === 'Expense' ? 'danger' : 'success'" />
-                    </template>
-                  </Column>
-                  <Column field="amount" header="Amount" />
-                  <Column field="description" header="Description" />
-                  <Column header="Actions">
-                    <template #body="{ data }">
-                      <Button icon="pi pi-trash" rounded severity="danger" text @click="deleteConfirm($event, data)" />
-                    </template>
-                  </Column>
-                  <template #empty>
-                    <div class="empty-table">
-                      <Button iconOnly severity="secondary" icon="pi pi-plus" rounded @click="visible = true" />
-                      <p style="font-weight: lighter;">Currently no transactions placed for this month</p>
-                    </div>
-                  </template>
-                </DataTable>
-              </div>
-            </div>
-          </template>
-        </Card>
+        <TransactionTable v-model:date="date" :filteredTransactions="filteredTransactions" v-on:btn-click="visible = true"
+          v-on:delete-row="handleDeleteTransaction" />
       </div>
 
       <div style="grid-area: card5;">
