@@ -171,7 +171,8 @@ ChartJs.register(
 .app-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: clamp(1rem, 2vw, 2rem);
+  padding: clamp(0.75rem, 3vw, 2rem);
 }
 
 .grid-container {
@@ -183,14 +184,18 @@ ChartJs.register(
     "card4 card4 card4 card5";
 }
 
+.grid-container > div {
+  min-width: 0;
+}
+
 /* Tablet */
 @media (max-width: 1024px) {
   .grid-container {
     grid-template-columns: repeat(2, 1fr);
     grid-template-areas:
-      "card1 card2"
-      "card3 card5"
-      "card4 card4";
+      "card1 card2 card3"
+      "card4 card4 card5"
+      "card4 card4 card5"
   }
 }
 

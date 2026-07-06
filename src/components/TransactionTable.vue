@@ -66,7 +66,7 @@ const deleteConfirm = (event: any, data: any) => {
                     <Button icon="pi pi-plus" label="Add Transactions/Expenses" @click="emits('btn-click')" />
                 </div>
                 <div>
-                    <DataTable tableStyle="min-width: 100%" :value="filteredTransactions" paginator :rows="3">
+                    <DataTable tableStyle="min-width: 50%" :value="filteredTransactions" paginator :rows="3">
                         <Column field="date" header="Date" />
                         <Column field="type" header="Type">
                             <template #body="{ data }">
