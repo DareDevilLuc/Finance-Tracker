@@ -64,6 +64,15 @@ There is no dedicated test suite in this repository yet, but you should:
 
 This project uses Supabase in `src/utils/supabase.ts`. Do not commit private keys or credentials.
 
+The main transactions table uses the following columns:
+
+- `id`
+- `user_id`
+- `amount`
+- `date`
+- `type`
+- `description`
+
 If you need to work with your own Supabase project:
 
 - Create a local environment file if needed.
