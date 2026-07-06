@@ -17,9 +17,9 @@ Features that the creator may implement:
 
 #### Example:   
 
-[ PRETEND SCREEN SHOT IS HERE ]
+<img width="1850" height="881" alt="image" src="https://github.com/user-attachments/assets/56961011-d39c-4c93-a0e2-2569c6871e97" />
 
-[ PRETEND OTHER SCREEN SHOT IS HERE ]
+<img width="1847" height="802" alt="image" src="https://github.com/user-attachments/assets/332c4f43-51a7-48b1-95f2-b23492fb86d9" />
 
 ## Installation and Setup Instructions
 
