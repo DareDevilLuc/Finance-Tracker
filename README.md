@@ -1,48 +1,50 @@
-# Finance Tracker
+## Personal Finance Tracker
 
-This template should help get you started developing with Vue 3 in Vite.
+Personal Finance Tracker
 
-## Recommended IDE Setup
+An application used to track your expenditures, using your allowances, expenses to calculate your net gain/loss. Built using supabase, vuejs3, primevue for components and chartjs. 
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Project Status
 
-## Recommended Browser Setup
+This project is currently a work-in-progress. However, the main core function has already been implemented. This project can be revisited to add in new features.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Features that the creator may implement:
+- Monthly Reports comparing to last month's statistics
+- Quarterly summary statistics
+- Graph to showcase user's trends
 
-## Type Support for `.vue` Imports in TS
+## Project Screen Shot(s)
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+#### Example:   
 
-## Customize configuration
+[ PRETEND SCREEN SHOT IS HERE ]
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+[ PRETEND OTHER SCREEN SHOT IS HERE ]
 
-## Project Setup
+## Installation and Setup Instructions
 
-```sh
-npm install
-```
+Clone down this repository. You will need and `npm` installed globally on your machine.  
 
-### Compile and Hot-Reload for Development
+Installation:
 
-```sh
-npm run dev
-```
+`npm install`  
 
-### Type-Check, Compile and Minify for Production
+To run website locally:
 
-```sh
-npm run build
-```
+`npm run dev`
 
-### Lint with [ESLint](https://eslint.org/)
+To Visit Site:
 
-```sh
-npm run lint
-```
+`localhost:3000/`  
+
+## Reflection
+
+This project began as a personal side project during my second summer break before my junior year as a Computer Science student. My primary goal was to learn modern web development through building a complete application from scratch, with a particular focus on backend development, state management, and the Vue ecosystem.
+
+Rather than using an existing personal finance application, I decided to build one that fits my own needs. The application allows me to record my allowance and daily expenses so I can better manage my budget while gaining hands-on experience with full-stack development.
+
+This is the first fully functional web application I have built from scratch. Throughout development, I used AI primarily as a learning aid rather than a code generator. It served as a tutor for understanding concepts, clarifying syntax, discovering framework features, and handling repetitive tasks, while the design, implementation, debugging, and architectural decisions remained my own.
+
+Working on this project gave me practical experience with component-based development, database integration, responsive UI design, and building maintainable applications. It also introduced me to PrimeVue, allowing me to focus on application logic instead of recreating common interface components from scratch.
+
+The primary technologies used in this project are Vue.js, Supabase, and PrimeVue. The experience I gained has given me a strong foundation for future full-stack projects, and I plan to continue exploring other frontend frameworks such as React to broaden my understanding of modern web development.
