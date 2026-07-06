@@ -17,6 +17,9 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+const { user } = useAuth()
+
+const username = computed(() => user.value?.user_metadata.username)
 
 const toast = useToast()
 const router = useRouter()
@@ -115,19 +118,6 @@ ChartJs.register(
   Legend
 )
 
-const chartData = computed(() => ({
-  labels: ['Allowance', 'Expense'],
-  datasets: [
-    {
-      data: [allowanceOverallTotal.value, expenseOverallTotal.value],
-      backgroundColor: [
-        '#9fe1cb',
-        '#f7c1c1',
-      ]
-    }
-  ],
-}))
-
 
 </script>
 
@@ -138,6 +128,10 @@ const chartData = computed(() => ({
   <div class="app-content">
     <div style="margin-right: auto ;">
       <h1>Personal Finance Tracker</h1>
+      <div style="display: flex; gap: 1rem;">
+        <p style="margin-bottom: -0.5rem">{{ username }}</p>
+        <Button label="Log out" @click="handleSignout" />
+      </div>
     </div>
     <div class="grid-container">
       <div style="grid-area: card1;">
@@ -157,19 +151,17 @@ const chartData = computed(() => ({
       </div>
 
       <div style="grid-area: card4;">
-        <TransactionTable v-model:date="date" :filteredTransactions="filteredTransactions" v-on:btn-click="visible = true"
-          v-on:delete-row="handleDeleteTransaction" />
+        <TransactionTable v-model:date="date" :filteredTransactions="filteredTransactions"
+          v-on:btn-click="visible = true" v-on:delete-row="handleDeleteTransaction" />
       </div>
 
       <div style="grid-area: card5;">
-        <OverallStatistics :allowance-overall-total="allowanceOverallTotal" :expense-overall-total="expenseOverallTotal" :difference-overall="differenceOverall"/>
+        <OverallStatistics :allowance-overall-total="allowanceOverallTotal" :expense-overall-total="expenseOverallTotal"
+          :difference-overall="differenceOverall" />
       </div>
 
     </div>
 
-    <div style="display: flex; justify-content: center;">
-      <Button label="Log out" @click="handleSignout" />
-    </div>
   </div>
 
   <AddTransactionDialog v-model:visible="visible" @submitted="handleNewTransaction" />
