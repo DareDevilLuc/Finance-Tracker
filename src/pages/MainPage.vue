@@ -183,6 +183,30 @@ ChartJs.register(
     "card4 card4 card4 card5";
 }
 
+/* Tablet */
+@media (max-width: 1024px) {
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "card1 card2"
+      "card3 card5"
+      "card4 card4";
+  }
+}
+
+/* Phone */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "card1"
+      "card2"
+      "card3"
+      "card4"
+      "card5";
+  }
+}
+
 .data-section {
   display: flex;
   flex-direction: column;
