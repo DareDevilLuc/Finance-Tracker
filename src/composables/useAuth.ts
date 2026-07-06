@@ -41,5 +41,5 @@ export function useAuth() {
     })
   }
 
-  return { signUp, signIn, signOut, initAuth, user}
+  return { signUp, signIn, signOut, initAuth, user }
 }

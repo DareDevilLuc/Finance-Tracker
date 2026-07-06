@@ -15,17 +15,15 @@ const router = useRouter()
 const success = ref('')
 const fail = ref('')
 
-const onFormSubmit = async ( { values }: any ) => {
+const onFormSubmit = async ({ values }: any) => {
   try {
     await signUp(values.email, values.password, values.username)
-    success.value = "Sign up successful !"
+    success.value = 'Sign up successful !'
     router.push('/auth/login')
   } catch (e: any) {
     fail.value = e.message || 'Unable to sign up. Try again.'
   }
 }
-
-
 </script>
 
 <template>
@@ -47,13 +45,12 @@ const onFormSubmit = async ( { values }: any ) => {
 
               <Button type="submit" label="Submit" />
 
-              <p v-if="success" style="color: green;">{{ success }}</p>
-              <p v-if="fail" style="color: red;"> {{ fail }}</p>
+              <p v-if="success" style="color: green">{{ success }}</p>
+              <p v-if="fail" style="color: red">{{ fail }}</p>
               <p>
                 Already have an account?
                 <RouterLink to="/auth/login" class="link">Log in !</RouterLink>
               </p>
-
             </div>
           </Form>
         </template>
@@ -63,7 +60,6 @@ const onFormSubmit = async ( { values }: any ) => {
 </template>
 
 <style scoped>
-
 .link {
   text-decoration: none;
   color: green;
@@ -74,7 +70,6 @@ const onFormSubmit = async ( { values }: any ) => {
   align-items: center;
   min-height: 100vh;
 }
-
 
 .signup-section {
   display: flex;

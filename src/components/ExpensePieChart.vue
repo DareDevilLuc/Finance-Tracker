@@ -1,14 +1,13 @@
 <script setup lang="ts">
-
-import { Pie } from 'vue-chartjs';
+import { Pie } from 'vue-chartjs'
 
 defineProps<{
-    data:any
+  data: any
 }>()
 </script>
 
 <template>
-    <Pie :data="data"/>
+  <Pie :data="data" />
 </template>
 
 <style scoped></style>

@@ -5,12 +5,11 @@ import { Analytics } from '@vercel/analytics/vue'
 
 const { initAuth } = useAuth()
 
-
 initAuth()
 </script>
 
 <template>
-  <Analytics/>
+  <Analytics />
   <div class="content">
     <RouterView />
   </div>

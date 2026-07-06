@@ -25,8 +25,6 @@ const onFormSubmit = async ({ values }: any) => {
     fail.value = e.message
   }
 }
-
-
 </script>
 
 <template>
@@ -41,23 +39,21 @@ const onFormSubmit = async ({ values }: any) => {
               <InputText id="email" name="email" fluid />
 
               <label for="password">Password</label>
-              <Password id="password" name="password" fluid :feedback="false"/>
+              <Password id="password" name="password" fluid :feedback="false" />
 
               <Button type="submit" label="Submit" />
 
-              <p v-if="success" style="color: green;">{{ success }}</p>
-              <p v-if="fail" style="color: red;"> {{ fail }}</p>
+              <p v-if="success" style="color: green">{{ success }}</p>
+              <p v-if="fail" style="color: red">{{ fail }}</p>
               <p>
                 Don't have an account yet?
                 <RouterLink to="/auth/signup" class="link">Sign up !</RouterLink>
               </p>
-
             </div>
           </Form>
         </template>
       </Card>
     </div>
-
   </div>
 </template>
 
