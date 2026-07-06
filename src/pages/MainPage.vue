@@ -1,34 +1,25 @@
 <script setup lang="ts">
+import OverallStatistics from '@/components/OverallStatistics.vue'
 import MonthSummaryCard from '@/components/MonthSummaryCard.vue'
 import TransactionTable from '@/components/TransactionTable.vue'
 import AddTransactionDialog from '@/components/AddTransactionDialog.vue'
-import { ref, onMounted, watch, computed } from 'vue'
-import Card from 'primevue/card'
+import { ref, onMounted, computed } from 'vue'
 import Button from 'primevue/button'
-import DatePicker from 'primevue/datepicker'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import Tag from 'primevue/tag'
 import ConfirmPopup from 'primevue/confirmpopup'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
 import { useTransactions } from '@/composables/useTransactions'
 import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
-import { useConfirm } from 'primevue/useconfirm'
-import ExpensePieChart from '@/components/ExpensePieChart.vue'
 import {
   Chart as ChartJs,
   ArcElement,
   Tooltip,
   Legend
 } from 'chart.js'
-import Panel from 'primevue/panel';
-import Divider from 'primevue/divider';
 
 const toast = useToast()
 const router = useRouter()
-const confirm = useConfirm()
 
 const { fetchTransactions } = useTransactions()
 
@@ -110,10 +101,6 @@ const handleNewTransaction = (transaction: any) => {
   toast.add({ summary: 'New transaction added', severity: 'success', group: 'bottom-center', life: 2000 })
 }
 
-watch(date, (newDate) => {
-  console.log(newDate.toLocaleString('en-CA').slice(0, 7))
-})
-
 const handleDeleteTransaction = async (data: any) => {
   toast.add({ summary: 'Delete Successful', severity: 'info', life: 2000 })
   transactions.value = transactions.value.filter(
@@ -175,35 +162,7 @@ const chartData = computed(() => ({
       </div>
 
       <div style="grid-area: card5;">
-        <Card>
-          <template #title>Overall Statistics</template>
-          <template #content>
-            <ExpensePieChart :data="chartData" />
-            <div style="margin-top: 4px;">
-              <Panel header="Summary">
-                <div style="display: flex; flex-direction: column;">
-                  <div
-                    style="display: flex; justify-content: space-between; background-color: #6deec1; color: #085041;">
-                    <span>Total Allowance</span>
-                    <span>₱{{ allowanceOverallTotal }}</span>
-                  </div>
-                  <div
-                    style="display: flex; justify-content: space-between; background-color: #fcebeb; color: #791f1f;">
-                    <span>Total Expense</span>
-                    <span>₱<span v-if="expenseOverallTotal">-</span>{{ expenseOverallTotal }}</span>
-                  </div>
-                  <Divider />
-                  <div
-                    style="display: flex; justify-content: space-between; background-color: #e6f1fb; color: #0c447c;">
-                    <span>Net Gain/Loss</span>
-                    <span>₱{{ differenceOverall }}</span>
-                  </div>
-                </div>
-              </Panel>
-            </div>
-
-          </template>
-        </Card>
+        <OverallStatistics :allowance-overall-total="allowanceOverallTotal" :expense-overall-total="expenseOverallTotal" :difference-overall="differenceOverall"/>
       </div>
 
     </div>
