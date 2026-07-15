@@ -8,7 +8,7 @@ An application used to track your expenditures, using your allowances, expenses 
 
 This project is currently a work-in-progress. However, the main core function has already been implemented. This project can be revisited to add in new features.
 
-Features that the creator may implement:
+Features that the creator or contributors may implement:
 - Monthly Reports comparing to last month's statistics
 - Quarterly summary statistics
 - Graph to showcase user's trends
